@@ -69,23 +69,22 @@ function select_data() {
             }
         })
     } else {
-        // Revert to displaying all the ufo sightings in a table format
+        // display all table elements
         table(display_data);
     }
 };
 
 
-// Complete the clear_all button function 
+// clear_all button function 
 
 function clear_all() {
 
     // Clear the input element
-    // input0 = "";
     document.getElementById("datetime").value = "";
 
-    // Remove any children from the table
+    // clear the table
     tbody.html("");
 
-    // Revert to displaying all the ufo sightings in a table format
+    // display all table elements
     table(display_data);
 }
