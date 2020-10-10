@@ -1,35 +1,91 @@
-// from data.js
-var tableData = data;
-// used to select the first element that matches the specified selector string.
-let tbody = d3.select("tbody");
+// save data from `data.js` to a variable
+var display_data = data;
 
-function buildTable(data){
+// writes a message to the console
+console.log(display_data);
 
-    tbody.html("");
-    // loop through the array
-    data.forEach((dataRow) => {
-        // Create a Row dynamically inside the table from form data 
-        let row = tbody.append("tr");
-        // returns an array of values.  
-        Object.values(dataRow).forEach((val) => {
-           let cell = row.append("td");
-           cell.text(val);
-       });
-    })
-}
+// clear previous return
 
-function handleClick(){
-    d3.event.preventDefault();
+const newButton = document.createElement("button");
+const panelBody = document.getElementsByClassName("panel-body")[0];
+newButton.id = "clear-btn";
+newButton.className = "btn btn-default";
+newButton.appendChild(document.createTextNode("Clear"));
+panelBody.appendChild(newButton);
 
-    let date = d3.select("#datetime").property("value");
-    let filterData = tableData;
+console.log(newButton);
 
-    if(date) {
-        filterData = filterData.filter((row) => row.datetime === date);
+
+// select the tbody in html code
+var tbody = d3.select("tbody");
+// select the buttons from html code
+var filter_button = d3.select("#filter-btn");
+var clear_button = d3.select("#clear-btn");
+// Select the input element
+var filter_bar_0 = d3.select("#datetime");
+
+
+// data display function
+
+table(display_data);
+
+function table() {
+    data.forEach((i) => {
+        var tr = tbody.append("tr");
+        for (key in i) {
+            tr.append("td").text(i[key]);
+        }
+    });
+};
+
+
+// Create html events, js reactions
+
+filter_button.on("click", select_data);
+clear_button.on("click", clear_all); 
+
+function select_data() {
+
+    // Get the value of the input element
+    var input0 = filter_bar_0.property("value");
+    console.log(input0)
+
+    var filtered = display_data;
+
+    // Define conditions for filtered
+
+    if (input0) {
+        filtered = filtered.filter(data => data.datetime === input0);
     }
-    buildTable(filterData);
+
+    if (filtered != display_data) {
+        tbody.selectAll('tr').remove();
+        tbody.selectAll('td').remove();
+
+        filtered.forEach((search) => {
+            var new_tr = tbody.append("tr");
+            for (key in search) {
+                new_tr.append("td").text(search[key]);
+            }
+        })
+    } else {
+        // Revert to displaying all the ufo sightings in a table format
+        table(display_data);
+    }
+};
+
+
+// Complete the clear_all button function 
+
+function clear_all() {
+
+    // Clear the input element
+    // input0 = "";
+    document.getElementById("datetime").value = "";
+
+    // Remove any children from the table
+    tbody.html("");
+
+    // Revert to displaying all the ufo sightings in a table format
+    table(display_data);
 }
-
-d3.selectAll("#filter-btn").on('click', handleClick);
-
-buildTable(tableData);
